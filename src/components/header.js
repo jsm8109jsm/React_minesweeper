@@ -140,9 +140,23 @@ export default function Header(){
 
     const tile = (targetNum, around) =>{
         tdArr[targetNum].addEventListener("click", function(){
-            console.log(around);
-            console.log(around.length);
             clickTile(targetNum, around);
+        })
+
+        tdArr[targetNum].addEventListener("mousedown", function(event){
+            if((event.button === 2) || (event.which === 3)){
+                document.addEventListener("contextmenu", function(event){
+                    event.preventDefault();
+                })
+                if(tdArr[targetNum].className === 'flag' || tdArr[targetNum].className === 'mine flag'){
+                    tdArr[targetNum].classList.remove('flag');
+                    tdArr[targetNum].innerHTML = ' ';
+                }
+                else{
+                    tdArr[targetNum].classList.add('flag');
+                    tdArr[targetNum].innerHTML = '🚩';
+                }
+            }
         })
     }
 
