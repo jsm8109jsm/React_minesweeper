@@ -4,8 +4,10 @@ export default function Header(){
     const [row, setRow] = useState(0);
     const [column, setColumn] = useState(0);
     const [mine, setMine] = useState(0);
+
     const [disable, setDisable] = useState(false);
     const [mineArr, setMineArr] = useState([]);
+    const [start, setStart] = useState('시작');
 
     // const [count, setCount] = useState(0);
 
@@ -73,19 +75,37 @@ export default function Header(){
         }
     }
 
-    const setStart = () => {
-        if(mine>row*column){
-            alert('지뢰 개수가 너무 많습니다!');
-            return;
+    const setStartGame = () => {
+        if(start === "시작"){
+            if(mine>row*column){
+                alert('지뢰 개수가 너무 많습니다!');
+                return;
+            }
+            makeBoard(row, column);
+            setMineArr(setMineNum(mine, row*column));
+            putMine();
+            setDisable(prev => !prev);
+            time = setInterval(startTime, 10);
+            for(let i=0; i<tdArr.length; i++){
+                tile(i, getAroundArr(i))
+            }
         }
-        makeBoard(row, column);
-        setMineArr(setMineNum(mine, row*column));
-        putMine();
-        setDisable(prev => !prev);
-        time = setInterval(startTime, 10);
-        for(let i=0; i<tdArr.length; i++){
-            tile(i, getAroundArr(i))
-        }
+        // else if(start === "재시작"){            
+        //     tenMilli = 0;
+        //     seconds = 0;
+        //     minutes = 0;
+        //     setStrMinutes('00');
+        //     setStrSeconds('00');
+        //     setStrTenMilli('00');
+        //     makeBoard(row, column);
+        //     setMineArr(setMineNum(mine, row*column));
+        //     putMine();
+        //     setDisable(prev => !prev);
+        //     time = setInterval(startTime, 10);
+        //     for(let i=0; i<tdArr.length; i++){
+        //         tile(i, getAroundArr(i))
+        //     }
+        // }
     }
 
     function getAroundArr(num) {
@@ -123,8 +143,9 @@ export default function Header(){
         }
         if(tdArr[targetNum].className === 'mines'){
             alert("게임 오버");
-            // document.location.reload();
             clearInterval(time);
+            setDisable(false);
+            setStart('재시작');
         }
         else if(count === 0){
             tdArr[targetNum].style.backgroundColor = "white";
@@ -144,20 +165,61 @@ export default function Header(){
         })
 
         tdArr[targetNum].addEventListener("mousedown", function(event){
-            if((event.button === 2) || (event.which === 3)){
+            if(event.button === 2){
                 document.addEventListener("contextmenu", function(event){
                     event.preventDefault();
                 })
-                if(tdArr[targetNum].className === 'flag' || tdArr[targetNum].className === 'mine flag'){
+                if(tdArr[targetNum].classList.contains('flag')){
                     tdArr[targetNum].classList.remove('flag');
                     tdArr[targetNum].innerHTML = ' ';
                 }
-                else{
+                else if(tdArr[targetNum].style.backgroundColor !== "white"){
                     tdArr[targetNum].classList.add('flag');
                     tdArr[targetNum].innerHTML = '🚩';
                 }
             }
+            else if(event.button === 1){
+                openTile(targetNum, around);
+            }
         })
+
+        tdArr[targetNum].addEventListener("dblclick", function(event){
+            openTile(targetNum, around);
+        })
+    }
+
+    const openTile = (targetNum, around) => {
+        let count=0, flagCount = 0;
+        for(let i=0; i<around.length; i++){
+            if(mineArr.includes(around[i])){
+                count++;
+            }
+        }
+        for(let i=0; i<around.length; i++){
+            if(tdArr[around[i]].classList.contains('flag')){
+                flagCount++;
+            }
+        }
+        if(count === flagCount){
+            for(let i=0; i<around.length; i++){
+                if(!tdArr[around[i]].classList.contains('flag')){
+                    clickTile(around[i], getAroundArr(around[i]));
+                }
+            }
+        }
+        console.log(count, flagCount);
+    }
+
+    const reset = () => {
+        setRow("");
+        setColumn("");
+        setMine("");
+        tenMilli = 0;
+        seconds = 0;
+        minutes = 0;
+        setStrMinutes('00');
+        setStrSeconds('00');
+        setStrTenMilli('00');
     }
 
     return(
@@ -167,8 +229,9 @@ export default function Header(){
             <h6>지뢰 개수 : </h6><input type="number" onChange={event => setMine(parseInt(event.target.value))} placeholder="지뢰 개수" disabled={disable}></input>
             <button className="start" onClick={() =>
                 {
-                    setStart();
-                }} disabled={disable}>시작</button>
+                    setStartGame();
+                }} disabled={disable}>{start}</button>
+            <button className="reset" onClick={reset} disabled={disable}>리셋</button>
             <span className="minutes">{strMinutes}</span>:<span className="seconds">{strSeconds}</span>:<span className="tenMilli">{strTenMilli}</span>
             <div id="board"></div>
         </header>
