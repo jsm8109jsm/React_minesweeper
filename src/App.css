@@ -1,10 +1,35 @@
 *{
   box-sizing: border-box;
+}
+
+body{
+  display: flex;
+  background-color: palegreen;
+  justify-content: center;
+}
+
+table{
   margin: 0 auto;
+}
+
+.btn{
+  display: flex;
+  justify-content: center;
+}
+
+.time{
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+}
+
+h1{
+  text-align: center;
 }
 
 h6{
   display: inline;
+  font-size: 16px;
 }
 
 table{
@@ -13,15 +38,45 @@ table{
 
 td{
   border: 1px solid black;
-  background-color: #cdcdcd;
-  width: 20px;
-  height: 20px;
+  background-color: greenyellow;
+  width: 25px;
+  height: 25px;
   text-align: center;
-  font-size: 10px;
+  font-size: 12.5px;
+  cursor: default;
+}
+
+
+.input{
+  text-align: center;
+  padding: 10px;
+}
+
+button{
+  height: 40px;
+  width: 100px;
+  border: 2px solid greenyellow;
+  border-radius: 5px;
+  margin: 20px;
+  background-color: greenyellow;
+  color: white;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+input[type="number"]{
+  height: 40px;
+  width: 150px;
+  border: 2px solid greenyellow;
+  border-radius: 5px;
+  margin: 20px;
+  background-color: greenyellow;
+}
+
+input::placeholder{
+  color: white;
 }

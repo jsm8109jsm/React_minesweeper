@@ -9,7 +9,11 @@ export default function Header(){
     const [mineArr, setMineArr] = useState([]);
     const [start, setStart] = useState('시작');
 
+
+    let openCount = 0;
     // const [count, setCount] = useState(0);
+
+    const color = ['red', 'blue', 'green', 'yellow', 'black', 'cyan', 'gray'];
 
     // const [flag, setFlag] = useState(false);
 
@@ -22,7 +26,6 @@ export default function Header(){
 
     const tdArr = document.getElementsByTagName('td');
 
-    // const [time, setTime] = useState();
     let time;
 
     const makeBoard = (row, column) =>{
@@ -76,19 +79,17 @@ export default function Header(){
     }
 
     const setStartGame = () => {
-        if(start === "시작"){
-            if(mine>row*column){
-                alert('지뢰 개수가 너무 많습니다!');
-                return;
-            }
-            makeBoard(row, column);
-            setMineArr(setMineNum(mine, row*column));
-            putMine();
-            setDisable(prev => !prev);
-            time = setInterval(startTime, 10);
-            for(let i=0; i<tdArr.length; i++){
-                tile(i, getAroundArr(i))
-            }
+        if(mine>row*column){
+            alert('지뢰 개수가 너무 많습니다!');
+            return;
+        }
+        makeBoard(row, column);
+        setMineArr(setMineNum(mine, row*column));
+        putMine();
+        setDisable(prev => !prev);
+        time = setInterval(startTime, 10);
+        for(let i=0; i<tdArr.length; i++){
+            tile(i, getAroundArr(i))
         }
         // else if(start === "재시작"){            
         //     tenMilli = 0;
@@ -107,6 +108,7 @@ export default function Header(){
         //     }
         // }
     }
+
 
     function getAroundArr(num) {
         //왼쪽 위
@@ -141,6 +143,7 @@ export default function Header(){
                 count++;
             }
         }
+
         if(tdArr[targetNum].className === 'mines'){
             alert("게임 오버");
             clearInterval(time);
@@ -149,6 +152,7 @@ export default function Header(){
         }
         else if(count === 0){
             tdArr[targetNum].style.backgroundColor = "white";
+            openCount++;
             for(let i=0; i<around.length; i++){
                 clickTile(around[i], getAroundArr(around[i]));
             }
@@ -156,12 +160,26 @@ export default function Header(){
         else if(count > 0){
             tdArr[targetNum].style.backgroundColor = "white";
             tdArr[targetNum].innerHTML = count;
+            openCount++;
+            tdArr[targetNum].style.color = color[count-1];
         }
+
+        let newMinute = minutes > 9 ? minutes.toString() : '0' + minutes.toString()
+        let newSecond = seconds > 9 ? seconds.toString() : '0' + seconds.toString()
+        let newTen = tenMilli > 9 ? tenMilli.toString() : '0' + tenMilli.toString()
+
+        if(openCount === row*column-mine){
+            clearInterval(time);
+            alert(`게임 클리어!\n\n게임 클리어 시간 : ${newMinute}:${newSecond}:${newTen}`);
+        }
+        
     }
 
     const tile = (targetNum, around) =>{
         tdArr[targetNum].addEventListener("click", function(){
-            clickTile(targetNum, around);
+            if(tdArr[targetNum].innerHTML !== '🚩'){
+                clickTile(targetNum, around);
+            }
         })
 
         tdArr[targetNum].addEventListener("mousedown", function(event){
@@ -178,7 +196,7 @@ export default function Header(){
                     tdArr[targetNum].innerHTML = '🚩';
                 }
             }
-            else if(event.button === 1){
+            else if(tdArr[targetNum].innerHTML !== '🚩' && event.button === 1){
                 openTile(targetNum, around);
             }
         })
@@ -207,7 +225,6 @@ export default function Header(){
                 }
             }
         }
-        console.log(count, flagCount);
     }
 
     const reset = () => {
@@ -224,16 +241,20 @@ export default function Header(){
 
     return(
         <header>
-            <h6>가로 : </h6><input type="number" onChange={event => setRow(parseInt(event.target.value))} placeholder="가로" min="5" disabled={disable}></input>
-            <h6>세로 : </h6><input type="number" onChange={event => setColumn(parseInt(event.target.value))} placeholder="세로" min="5" disabled={disable}></input>
-            <h6>지뢰 개수 : </h6><input type="number" onChange={event => setMine(parseInt(event.target.value))} placeholder="지뢰 개수" disabled={disable}></input>
-            <button className="start" onClick={() =>
-                {
-                    setStartGame();
-                }} disabled={disable}>{start}</button>
-            <button className="reset" onClick={reset} disabled={disable}>리셋</button>
-            <span className="minutes">{strMinutes}</span>:<span className="seconds">{strSeconds}</span>:<span className="tenMilli">{strTenMilli}</span>
+            <h1>지뢰찾기</h1>
+            <span className="input"><h6>가로 : </h6><input type="number" onChange={event => setRow(parseInt(event.target.value))} placeholder="가로" min="5" disabled={disable}></input></span>
+            <span className="input"><h6>세로 : </h6><input type="number" onChange={event => setColumn(parseInt(event.target.value))} placeholder="세로" min="5" disabled={disable}></input></span>
+            <span className="input"><h6>지뢰 개수 : </h6><input type="number" onChange={event => setMine(parseInt(event.target.value))} placeholder="지뢰 개수" disabled={disable}></input></span>
+            <div className="btn">
+                <button className="start" onClick={setStartGame} disabled={disable}>{start}</button>
+                <button className="reset" onClick={reset} disabled={disable}>리셋</button>
+            </div>
+            <div className="time">
+                <span className="minutes">{strMinutes}</span>:<span className="seconds">{strSeconds}</span>:<span className="tenMilli">{strTenMilli}</span>
+            </div>
             <div id="board"></div>
         </header>
     )
 }
+
+//재시작 구현, 리셋 구현, css, 첫클릭  
