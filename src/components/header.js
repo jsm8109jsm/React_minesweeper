@@ -13,7 +13,7 @@ export default function Header(){
     let openCount = 0;
     // const [count, setCount] = useState(0);
 
-    const color = ['red', 'blue', 'green', 'yellow', 'black', 'cyan', 'gray'];
+    const color = ["red", "skyblue", "olive", "green", "blue", "purple", "brown", "black"];
 
     // const [flag, setFlag] = useState(false);
 
@@ -42,6 +42,9 @@ export default function Header(){
     }
 
     const setMineNum = (mine, size) =>{
+        console.log(mineArr);
+        setMineArr([]);
+        console.log(mineArr);
         for(let i=0; i<mine; i++){
             let randomNum = Math.floor(Math.random() * size);
             if(!mineArr.includes(randomNum)){
@@ -79,7 +82,16 @@ export default function Header(){
     }
 
     const setStartGame = () => {
-        if(mine>row*column){
+        if(row <= 5){
+            alert('가로 개수가 너무 적습니다!');
+        }
+        else if(column <= 5){
+            alert('세로 개수가 너무 적습니다!');
+        }
+        else if(mine <= 5){
+            alert('지뢰 개수가 너무 적습니다!');
+        }
+        else if(mine > row*column){
             alert('지뢰 개수가 너무 많습니다!');
             return;
         }
@@ -144,12 +156,21 @@ export default function Header(){
             }
         }
 
+
+        if((tdArr[targetNum].className === 'mines' || count > 0) && openCount === 0){
+            setMineArr(setMineNum(mine, row*column));
+            console.log("발동");
+            putMine();
+            console.log(mineArr);
+        }
+
         if(tdArr[targetNum].className === 'mines'){
             alert("게임 오버");
             clearInterval(time);
             setDisable(false);
             setStart('재시작');
         }
+
         else if(count === 0){
             tdArr[targetNum].style.backgroundColor = "white";
             openCount++;
@@ -257,4 +278,4 @@ export default function Header(){
     )
 }
 
-//재시작 구현, 리셋 구현, css, 첫클릭  
+//재시작 구현, 리셋 구현, 첫클릭  
