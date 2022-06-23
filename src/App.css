@@ -38,9 +38,9 @@ table{
 
 td{
   border: 1px solid black;
-  background-color: greenyellow;
-  width: 25px;
-  height: 25px;
+  background-color: #405AC9;
+  width: 2em;
+  height: 2em;
   text-align: center;
   font-size: 12.5px;
   cursor: default;
@@ -57,7 +57,7 @@ button{
   width: 100px;
   border: 2px solid greenyellow;
   border-radius: 5px;
-  margin: 20px;
+  margin: 10px;
   background-color: greenyellow;
   color: black;
 }
@@ -73,6 +73,6 @@ input[type="number"]{
   width: 150px;
   border: 2px solid greenyellow;
   border-radius: 5px;
-  margin: 20px;
+  margin: 10px;
   background-color: greenyellow;
 }

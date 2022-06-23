@@ -1,13 +1,12 @@
 import React, {useState} from "react";
 
-export default function Header(){
+export default function Main(){
     const [row, setRow] = useState(0);
     const [column, setColumn] = useState(0);
     const [mine, setMine] = useState(0);
 
     const [disable, setDisable] = useState(false);
     const [mineArr, setMineArr] = useState([]);
-    const [start, setStart] = useState('시작');
 
 
     let openCount = 0;
@@ -82,19 +81,31 @@ export default function Header(){
     }
 
     const setStartGame = () => {
-        if(row <= 5){
+        if(row < 5){
             alert('가로 개수가 너무 적습니다!');
+            return;
         }
-        else if(column <= 5){
+        else if(row > 50){
+            alert('가로 개수가 너무 많습니다!');
+            return;
+        }
+        else if(column < 5){
             alert('세로 개수가 너무 적습니다!');
+            return;
         }
-        else if(mine <= 5){
+        else if(column > 50){
+            alert('세로 개수가 너무 많습니다!');
+            return;
+        }
+        else if(mine < 5){
             alert('지뢰 개수가 너무 적습니다!');
+            return;
         }
         else if(mine > row*column){
             alert('지뢰 개수가 너무 많습니다!');
             return;
         }
+        
         makeBoard(row, column);
         setMineArr(setMineNum(mine, row*column));
         putMine();
@@ -103,22 +114,6 @@ export default function Header(){
         for(let i=0; i<tdArr.length; i++){
             tile(i, getAroundArr(i))
         }
-        // else if(start === "재시작"){            
-        //     tenMilli = 0;
-        //     seconds = 0;
-        //     minutes = 0;
-        //     setStrMinutes('00');
-        //     setStrSeconds('00');
-        //     setStrTenMilli('00');
-        //     makeBoard(row, column);
-        //     setMineArr(setMineNum(mine, row*column));
-        //     putMine();
-        //     setDisable(prev => !prev);
-        //     time = setInterval(startTime, 10);
-        //     for(let i=0; i<tdArr.length; i++){
-        //         tile(i, getAroundArr(i))
-        //     }
-        // }
     }
 
 
@@ -157,18 +152,23 @@ export default function Header(){
         }
 
 
-        if((tdArr[targetNum].className === 'mines' || count > 0) && openCount === 0){
-            setMineArr(setMineNum(mine, row*column));
-            console.log("발동");
-            putMine();
-            console.log(mineArr);
-        }
+        // if((tdArr[targetNum].className === 'mines' || count > 0) && openCount === 0){
+        //     setMineArr(setMineNum(mine, row*column));
+        //     console.log("발동");
+        //     putMine();
+        //     console.log(mineArr);
+        // }
 
         if(tdArr[targetNum].className === 'mines'){
             alert("게임 오버");
             clearInterval(time);
             setDisable(false);
-            setStart('재시작');
+            for(let i=0; i<tdArr.length; i++){
+                if(tdArr[i].classList.contains('mines')){
+                    tdArr[i].style.backgroundColor = "white";
+                    tdArr[i].innerHTML = '🚩';
+                }
+            }
         }
 
         else if(count === 0){
@@ -263,11 +263,13 @@ export default function Header(){
     return(
         <header>
             <h1>지뢰찾기</h1>
-            <span className="input"><h6>가로 : </h6><input type="number" onChange={event => setRow(parseInt(event.target.value))} placeholder="가로" min="5" disabled={disable}></input></span>
-            <span className="input"><h6>세로 : </h6><input type="number" onChange={event => setColumn(parseInt(event.target.value))} placeholder="세로" min="5" disabled={disable}></input></span>
-            <span className="input"><h6>지뢰 개수 : </h6><input type="number" onChange={event => setMine(parseInt(event.target.value))} placeholder="지뢰 개수" disabled={disable}></input></span>
+            <div>
+                <span className="input"><h6>가로 : </h6><input type="number" onChange={event => setRow(parseInt(event.target.value))} placeholder="최소 : 5, 최대 : 50" disabled={disable}></input></span>
+                <span className="input"><h6>세로 : </h6><input type="number" onChange={event => setColumn(parseInt(event.target.value))} placeholder="최소 : 5, 최대 : 50" disabled={disable}></input></span>
+                <span className="input"><h6>지뢰 개수 : </h6><input type="number" onChange={event => setMine(parseInt(event.target.value))} placeholder="최소 : 5" disabled={disable}></input></span>
+            </div>
             <div className="btn">
-                <button className="start" onClick={setStartGame} disabled={disable}>{start}</button>
+                <button className="start" onClick={setStartGame} disabled={disable}>시작</button>
                 <button className="reset" onClick={reset} disabled={disable}>리셋</button>
             </div>
             <div className="time">
