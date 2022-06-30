@@ -160,15 +160,16 @@ export default function Main(){
         // }
 
         if(tdArr[targetNum].className === 'mines'){
-            alert("게임 오버");
-            clearInterval(time);
-            setDisable(false);
             for(let i=0; i<tdArr.length; i++){
                 if(tdArr[i].classList.contains('mines')){
                     tdArr[i].style.backgroundColor = "white";
                     tdArr[i].innerHTML = '🚩';
                 }
             }
+            alert("게임 오버");
+            clearInterval(time);
+            setDisable(false);
+            
         }
 
         else if(count === 0){
@@ -219,6 +220,7 @@ export default function Main(){
             }
             else if(tdArr[targetNum].innerHTML !== '🚩' && event.button === 1){
                 openTile(targetNum, around);
+                tdArr[targetNum].style.cursor = "default";
             }
         })
 
@@ -247,19 +249,6 @@ export default function Main(){
             }
         }
     }
-
-    const reset = () => {
-        setRow("");
-        setColumn("");
-        setMine("");
-        tenMilli = 0;
-        seconds = 0;
-        minutes = 0;
-        setStrMinutes('00');
-        setStrSeconds('00');
-        setStrTenMilli('00');
-    }
-
     return(
         <header>
             <h1>지뢰찾기</h1>
@@ -270,7 +259,6 @@ export default function Main(){
             </div>
             <div className="btn">
                 <button className="start" onClick={setStartGame} disabled={disable}>시작</button>
-                <button className="reset" onClick={reset} disabled={disable}>리셋</button>
             </div>
             <div className="time">
                 <span className="minutes">{strMinutes}</span>:<span className="seconds">{strSeconds}</span>:<span className="tenMilli">{strTenMilli}</span>
@@ -279,5 +267,3 @@ export default function Main(){
         </header>
     )
 }
-
-//재시작 구현, 리셋 구현, 첫클릭  

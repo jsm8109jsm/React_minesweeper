@@ -1,5 +1,6 @@
 *{
   box-sizing: border-box;
+  cursor: default;
 }
 
 body{
@@ -47,6 +48,7 @@ td{
 }
 
 
+
 .input{
   text-align: center;
   padding: 10px;
@@ -54,18 +56,20 @@ td{
 
 button{
   height: 40px;
-  width: 100px;
+  width: 200px;
   border: 2px solid greenyellow;
   border-radius: 5px;
   margin: 10px;
   background-color: greenyellow;
   color: black;
+  cursor: pointer;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+  
 }
 
 input[type="number"]{
@@ -75,4 +79,5 @@ input[type="number"]{
   border-radius: 5px;
   margin: 10px;
   background-color: greenyellow;
+  cursor: text;
 }
